@@ -14,5 +14,14 @@ export default {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) {},
+  bootstrap({ strapi }) {
+    strapi.db.lifecycles.subscribe({
+      models: ['plugin::users-permissions.user'],
+      async beforeCreate(event){
+        if(!event.params.data.email.endsWith("@nordakademie.de")){
+          throw new Error("email must end with @nordakademie.de")
+        }
+      }
+    })
+  },
 };
