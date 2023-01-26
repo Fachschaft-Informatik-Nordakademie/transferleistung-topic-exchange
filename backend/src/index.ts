@@ -15,11 +15,14 @@ export default {
    * run jobs, or perform some special logic.
    */
   bootstrap({ strapi }) {
+
+    // A user can only be created if it ends with a certain email-domain
     strapi.db.lifecycles.subscribe({
       models: ['plugin::users-permissions.user'],
       async beforeCreate(event){
-        if(!event.params.data.email.endsWith("@nordakademie.de")){
-          throw new Error("email must end with @nordakademie.de")
+        const domain = "@nordakademie.de";
+        if(!event.params.data.email.endsWith(domain)){
+          throw new Error("email must end with " + domain);
         }
       }
     })
