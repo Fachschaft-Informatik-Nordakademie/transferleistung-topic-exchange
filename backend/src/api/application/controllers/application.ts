@@ -3,6 +3,7 @@
  */
 
 import { factories } from '@strapi/strapi'
+import emailTemplate from '../../../../util/emailTemplates';
 
 export default factories.createCoreController('api::application.application', ({strapi}): {} => ({
   async create(ctx){
@@ -108,14 +109,21 @@ export default factories.createCoreController('api::application.application', ({
       }, 500);
     }
 
-    await strapi.plugin('email').service('email').send({
-      to: student.attributes.email,
-      subject: 'Themenbörse | Deine Bewerbung wurde akzeptiert!',
-      html: `
-        <h2>Glückwunsch!</h2>
-        <p>Deine Bewerbung hat uns überzeugt und dir wurde folgendes Thema zugeteilt: <b>${topic.title}</b></p>
-      `,
-    });
+    await strapi.plugin('email').service('email').sendTemplatedEmail(
+      {
+        to: student.attributes.email,
+      },
+      emailTemplate,
+      {
+        subject: 'Deine Bewerbung wurde akzeptiert!',
+        title: 'Deine Bewerbung wurde akzeptiert!',
+        text: `Die Zuweiser haben deine Bewerbung gelesen und du hast sie überzeugt! Dir wurde das Thema "${topic.title}" zugewiesen`,
+        button: {
+          label: 'Zur Bewerbung',
+          href: 'https://www.google.com'
+        }
+      }
+    );
 
     ctx.send({
       message: 'The application was approved.'
