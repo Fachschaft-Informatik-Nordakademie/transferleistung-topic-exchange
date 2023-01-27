@@ -80,5 +80,45 @@ export default factories.createCoreController('api::application.application', ({
     delete data.attributes?.student
 
     return { data, meta }
+  },
+
+  async approve(ctx){
+    ctx.query.populate = 'student,topic';
+    const application = await super.findOne(ctx);
+
+    const topicId = application.data.attributes.topic.data.id;
+    const topic = await strapi.service('api::topic.topic').findOne(topicId, {populate: 'student'});
+
+    if(topic.student){
+      return ctx.badRequest("An application is already approved for this topic");
+    }
+
+    const student = application.data.attributes.student.data
+    const studentId = student.id;
+
+    const approveRespsone = await strapi.service('api::topic.topic').update(topicId, {
+      data: {
+        student: studentId
+      }
+    })
+
+    if(!approveRespsone){
+      ctx.send({
+        message: 'Something went wrong. Application could not be approved'
+      }, 500);
+    }
+
+    await strapi.plugin('email').service('email').send({
+      to: student.attributes.email,
+      subject: 'Themenbörse | Deine Bewerbung wurde akzeptiert!',
+      html: `
+        <h2>Glückwunsch!</h2>
+        <p>Deine Bewerbung hat uns überzeugt und dir wurde folgendes Thema zugeteilt: <b>${topic.title}</b></p>
+      `,
+    });
+
+    ctx.send({
+      message: 'The application was approved.'
+    }, 200);
   }
 }));
