@@ -3,7 +3,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 
-
 const authenticationRouter = require('./routes/authentication');
 const topicExchangePlatformRouter = require('./routes/topic-exchange-platform');
 
@@ -19,7 +18,7 @@ app.use(bodyParser.json())
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
 }))
 
 app.use('/auth', authenticationRouter);

@@ -11,5 +11,5 @@ module.exports = async (req, res, next) => {
 
     const strapi = new Strapi();
     await strapi.getPasswordlessAuthenticationLink(email, context);
-    res.redirect('/auth/sign-in?success=true');
+    res.render('account/account-signin', {success: true});
 }

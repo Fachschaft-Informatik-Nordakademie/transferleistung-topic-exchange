@@ -307,7 +307,7 @@
         <!-- Sign in form -->
         <div class="container d-flex flex-wrap justify-content-center justify-content-xl-start h-100 pt-5">
           <div class="w-100 align-self-end pt-1 pt-md-4 pb-4" style="max-width: 526px;">
-            <% if(success){ %>
+            <% if(typeof success !== 'undefined' && success){ %>
               <h1 class="text-center text-xl-start">Gut gemacht!</h1>
               <div class="alert alert-success" role="alert">
                 Dir wurde ein Link an deiner E-Mail Adresse versendet, damit du dich ohne Passwort einloggen kannst.
@@ -315,7 +315,7 @@
             <a class="btn btn-primary" href="/">Zur Startseite</a>
             <% } else { %>
               <h1 class="text-center text-xl-start">Willkommen!</h1>
-              <form class="needs-validation mb-2" method="POST" action="/auth/send-link<%= redirectTo ? '?redirectTo=' + redirectTo : null %>" novalidate>
+              <form class="needs-validation mb-2" method="POST" action="/auth/send-link<%= typeof redirectTo !== 'undefined' ? '?redirectTo=' + redirectTo : null %>" novalidate>
                 <div class="input-group mb-4">
                   <input name="email_prefix" id="email_prefix" type="text" class="form-control" placeholder="max.mustermann" required>
                   <span class="input-group-text">@nordakademie.de</span>
