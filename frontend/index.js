@@ -3,14 +3,18 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 
+
+const authenticationRouter = require('./routes/authentication');
+const topicExchangePlatformRouter = require('./routes/topic-exchange-platform');
+
 const app = express();
 
 app.set('view engine', 'ejs');
 
+app.use(express.static('public'))
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-const authenticationRouter = require('./routes/authentication');
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -19,6 +23,7 @@ app.use(session({
 }))
 
 app.use('/auth', authenticationRouter);
+app.use('/topic-exchange-platform', topicExchangePlatformRouter);
 
 app.get('/', (req, res, next) => {
     res.render('index');

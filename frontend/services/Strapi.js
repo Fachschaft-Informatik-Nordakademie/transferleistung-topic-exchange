@@ -6,9 +6,9 @@ class Strapi {
         this.url = process.env.STRAPI_URL
     }
 
-    async getPasswordlessAuthenticationLink(email){
+    async getPasswordlessAuthenticationLink(email, context){
         const path = '/api/passwordless/send-link';
-        await axios.post(this.url + path, {email});
+        await axios.post(this.url + path, {email, context});
     }
 
     async loginViaToken(loginToken){
