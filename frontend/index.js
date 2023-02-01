@@ -5,6 +5,8 @@ require('dotenv').config()
 
 const app = express();
 
+app.set('view engine', 'ejs');
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -17,6 +19,10 @@ app.use(session({
 }))
 
 app.use('/auth', authenticationRouter);
+
+app.get('/', (req, res, next) => {
+    res.render('index');
+})
 
 app.listen(process.env.PORT, () => {
     console.log(`App running on Port ${process.env.PORT}`);
