@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Silicon | Blog List With Sidebar</title>
+    <title>Themenbörse</title>
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="Silicon - Multipurpose Technology Bootstrap Template">
@@ -308,7 +308,7 @@
           <li class="breadcrumb-item">
             <a href="index.html"><i class="bx bx-home-alt fs-lg me-1"></i>Home</a>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">Blog List with Sidebar</li>
+          <li class="breadcrumb-item active" aria-current="page">Themenbörse</li>
         </ol>
       </nav>
 
@@ -318,7 +318,7 @@
 
         <!-- Page title + Layout switcher -->
         <div class="d-flex align-items-center justify-content-between mb-4 pb-1 pb-md-3">
-          <h1 class="mb-0">Blog List with Sidebar</h1>
+          <h1 class="mb-0">Themenbörse</h1>
           <div class="d-flex align-items-center ms-sm-4 ms-3">
             <a href="blog-list-with-sidebar.html" class="nav-link me-2 p-0 active">
               <i class="bx bx-list-ul fs-4"></i>
@@ -377,7 +377,7 @@
               <article class="card me-xl-5 mb-4">
                 <div class="card-body">
                   <div class="d-flex justify-content-between mb-3">
-                    <a href="#" class="badge fs-sm text-dark bg-warning shadow-warning text-decoration-none"><%= topic.module %></a>
+                    <a href="#" class="badge fs-sm text-decoration-none" style="background-color: <%= topic.module.color.background %>; color: <%= topic.module.color.text %>"><%= topic.module.name %> (<%= topic.module.number %>)</a>
                     <a href="#" class="btn btn-icon btn-secondary btn-sm rounded-circle position-absolute top-0 end-0 zindex-5 me-3 mt-3" data-bs-toggle="tooltip" data-bs-placement="left" title="Read later">
                       <i class="bx bx-bookmark"></i>
                     </a>
@@ -391,7 +391,7 @@
                     <div class="fs-sm border-end pe-3 me-3">Veröffentlicht am <%= `${publishedAt.getDate()}.${publishedAt.getMonth()+1}.${publishedAt.getFullYear()}` %></div>
 
                     <div class="d-flex align-items-center me-3">
-                      <span class="fs-sm">Schwierigkeit: <b><%= topic.difficulty %></b></span>
+                      <span class="fs-sm">Schwierigkeit: <b><%= topic.difficulty.name %></b></span>
                     </div>
                     <!--
                       <div class="d-flex align-items-center me-3">
@@ -414,46 +414,43 @@
               <div class="pb-2 pb-lg-3"></div>
             <% } %>
 
-            <!-- Load more button -->
-            <div class="d-flex justify-content-center">
-              <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item">
-                    <a href="#" class="page-link">
-                      <i class="bx bx-chevron-left ms-n1 me-1"></i>
-                      Zurück
-                    </a>
-                  </li>
-                  <li class="page-item disabled d-sm-none">
-                    <span class="page-link text-body">2 / 5</span>
-                  </li>
-                  <li class="page-item d-none d-sm-block">
-                    <a href="#" class="page-link">1</a>
-                  </li>
-                  <li class="page-item active d-none d-sm-block" aria-current="page">
-      <span class="page-link">
-        2
-        <span class="visually-hidden">(current)</span>
-      </span>
-                  </li>
-                  <li class="page-item d-none d-sm-block">
-                    <a href="#" class="page-link">3</a>
-                  </li>
-                  <li class="page-item d-none d-sm-block">
-                    <a href="#" class="page-link">4</a>
-                  </li>
-                  <li class="page-item d-none d-sm-block">
-                    <a href="#" class="page-link">5</a>
-                  </li>
-                  <li class="page-item">
-                    <a href="#" class="page-link">
-                      Nächste
-                      <i class="bx bx-chevron-right me-n1 ms-1"></i>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+            <!-- Load more button  -->
+            <!-- <span class="visually-hidden">(current)</span> -->
+            <% const { page, pageCount } = topics.meta.pagination %>
+            <% if(pageCount !== 1) { %>
+              <div class="d-flex justify-content-center">
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination">
+                    <% if(page !== 1){ %>
+                      <li class="page-item">
+                        <a href="#" data-page="<%= data - 1 %>" class="page-link pagination-link">
+                          <i class="bx bx-chevron-left ms-n1 me-1"></i>
+                          Zurück
+                        </a>
+                      </li>
+                    <% } %>
+                    <li class="page-item disabled d-sm-none">
+                      <span class="page-link text-body"><%= page %> / <%= pageCount %></span>
+                    </li>
+                    <% for(let i = page - 2; i <= page + 2; i++){ %>
+                        <% if(i >= 1 && i <= pageCount){ %>
+                          <li class="page-item d-none d-sm-block <%= i === page ? 'active': '' %> ">
+                            <a data-page="<%= i %>" href="#" class="page-link pagination-link"><%= i %></a>
+                          </li>
+                        <% } %>
+                    <% } %>
+                    <% if(page < pageCount){ %>
+                      <li class="page-item">
+                        <a href="#" data-page="<%= page + 1 %>" class="page-link pagination-link">
+                          Nächste
+                          <i class="bx bx-chevron-right me-n1 ms-1"></i>
+                        </a>
+                      </li>
+                    <% } %>
+                  </ul>
+                </nav>
+              </div>
+            <% } %>
           </div>
 
 
@@ -471,36 +468,23 @@
               <div class="offcanvas-body">
 
                 <!-- Search form -->
-                <form class="input-group mb-4">
-                  <input type="text" placeholder="Search the blog..." class="form-control rounded pe-5">
+                <form class="input-group mb-4" id="search-form">
+                  <input type="text" placeholder="Suche nach einem Thema..." value="<%= search %>" id="search-input" class="form-control rounded pe-5">
                   <i class='bx bx-search position-absolute top-50 end-0 translate-middle-y me-3 fs-lg zindex-5'></i>
                 </form>
 
                 <!-- Categories -->
                 <div class="card card-body mb-4">
-                  <h3 class="h5">Categories</h3>
+                  <h3 class="h5">Module</h3>
                   <ul class="nav flex-column fs-sm">
                     <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0 active">All topics <span class="fw-normal opacity-60 ms-1">(48)</span></a>
+                      <a href="#" class="nav-link py-1 px-0 active">Alle Module <span class="fw-normal opacity-60 ms-1"></span></a>
                     </li>
-                    <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0">Digital <span class="fw-normal opacity-60 ms-1">(12)</span></a>
-                    </li>
-                    <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0">Marketing <span class="fw-normal opacity-60 ms-1">(5)</span></a>
-                    </li>
-                    <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0">Startups <span class="fw-normal opacity-60 ms-1">(10)</span></a>
-                    </li>
-                    <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0">Technology <span class="fw-normal opacity-60 ms-1">(9)</span></a>
-                    </li>
-                    <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0">Business <span class="fw-normal opacity-60 ms-1">(4)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="#" class="nav-link py-1 px-0">Processes & Tools <span class="fw-normal opacity-60 ms-1">(3)</span></a>
-                    </li>
+                    <% for(let module of modules.data){ %>
+                      <li class="nav-item mb-1">
+                        <a href="#" class="nav-link py-1 px-0"><%= module.name %>> <span class="fw-normal opacity-60 ms-1"></span></a>
+                      </li>
+                    <% } %>
                   </ul>
                 </div>
 
@@ -789,5 +773,36 @@
 
     <!-- Main Theme Script -->
     <script src="/assets/js/theme.min.js"></script>
+
+    <script>
+      // search handler
+      const searchForm = document.getElementById('search-form');
+      const searchInput = document.getElementById('search-input');
+
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const searchParams = new URLSearchParams();
+        if(searchInput.value){
+          searchParams.set('search', searchInput.value);
+        }
+
+        window.location.search = searchParams.toString();
+      });
+
+      // pagination handler
+      const paginationLinks = document.getElementsByClassName('pagination-link');
+      for(let i = 0; i < paginationLinks.length; i++){
+        paginationLinks[i].addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = parseInt(paginationLinks[i].dataset.page);
+
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.set('page', page);
+
+          window.location.search = searchParams.toString();
+        });
+      }
+    </script>
   </body>
 </html>

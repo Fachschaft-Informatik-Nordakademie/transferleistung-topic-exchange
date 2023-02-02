@@ -2,10 +2,44 @@ const {Strapi} = require("../../services");
 
 module.exports = async (req, res, next) => {
     const page = req.query.page || 1;
+    const search = req.query.search;
     const jwt = req.session.auth.jwt;
 
-    const strapi = new Strapi(jwt);
-    const topics = await strapi.getTopics();
+    const populateOptions = [
+        'difficulty',
+        'module',
+        'module.color'
+    ]
 
-    res.render('topics/list-with-sidebar', {topics});
+    const sortOptions = 'publishedAt:desc'
+
+    const paginationOptions = {
+        page: page,
+        pageSize: 15,
+    }
+
+    const filterOptions = {
+        student: {
+            id: {
+                $null: true
+            }
+        },
+        title: {
+            $contains :search
+        }
+    }
+
+    const queryObject = {}
+    queryObject['pagination'] = paginationOptions;
+    queryObject['populate'] = populateOptions;
+    queryObject['sort'] = sortOptions;
+    queryObject['filters'] = filterOptions;
+
+    const strapi = new Strapi(jwt);
+    const topics = await strapi.getTopics(queryObject);
+    const modules = await strapi.getModules({
+        sort: 'name:asc'
+    });
+
+    res.render('topics/list-with-sidebar', {topics, search, modules});
 }

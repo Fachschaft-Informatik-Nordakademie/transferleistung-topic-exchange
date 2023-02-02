@@ -1946,6 +1946,15 @@
     lodash "4.17.21"
     sift "16.0.0"
 
+"@strapi/plugin-color-picker@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@strapi/plugin-color-picker/-/plugin-color-picker-4.6.0.tgz#662bf80f58db3deaa13908777c7adf6d5e0119a7"
+  integrity sha512-jzUjaHNxCcauXKEiuEKLEwcVXrrkeU6EFPr99JB/5iUCSjTMPZoP4tHSQ9UAKuChlWdUj+gU54Nw2Tu/Yackfw==
+  dependencies:
+    react "^17.0.2"
+    react-colorful "5.6.1"
+    react-dom "^17.0.2"
+
 "@strapi/plugin-content-manager@4.6.0":
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@strapi/plugin-content-manager/-/plugin-content-manager-4.6.0.tgz#739a38a6faf867bf312cc966d9b62fef8251f2f0"
@@ -8173,6 +8182,11 @@ rc@1.2.8, rc@^1.2.7, rc@^1.2.8:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-colorful@5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.6.1.tgz#7dc2aed2d7c72fac89694e834d179e32f3da563b"
+  integrity sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==
 
 react-copy-to-clipboard@^5.1.0:
   version "5.1.0"

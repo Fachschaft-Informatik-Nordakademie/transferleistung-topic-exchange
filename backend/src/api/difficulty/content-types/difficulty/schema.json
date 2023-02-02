@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "difficulties",
+  "info": {
+    "singularName": "difficulty",
+    "pluralName": "difficulties",
+    "displayName": "Difficulty",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "required": true,
+      "unique": false,
+      "private": true,
+      "default": 0
+    },
+    "color": {
+      "type": "component",
+      "repeatable": false,
+      "component": "groups.color",
+      "required": true
+    }
+  }
+}

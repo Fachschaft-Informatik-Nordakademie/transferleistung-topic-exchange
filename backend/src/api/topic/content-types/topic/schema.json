@@ -4,7 +4,8 @@
   "info": {
     "singularName": "topic",
     "pluralName": "topics",
-    "displayName": "Topic"
+    "displayName": "Topic",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -17,23 +18,6 @@
     },
     "description": {
       "type": "text",
-      "required": true
-    },
-    "module": {
-      "type": "enumeration",
-      "enum": [
-        "Analytische Informationssysteme (I165)",
-        "Datenbanksysteme (I110)"
-      ],
-      "required": true
-    },
-    "difficulty": {
-      "type": "enumeration",
-      "enum": [
-        "easy",
-        "moderate",
-        "challenging"
-      ],
       "required": true
     },
     "student": {
@@ -51,6 +35,16 @@
       "relation": "oneToMany",
       "target": "api::application.application",
       "mappedBy": "topic"
+    },
+    "module": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::module.module"
+    },
+    "difficulty": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::difficulty.difficulty"
     }
   }
 }
