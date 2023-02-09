@@ -3,6 +3,7 @@ const {Strapi} = require("../../services");
 module.exports = async (req, res, next) => {
     const page = req.query.page || 1;
     const search = req.query.search;
+    const moduleId = req.query.moduleId;
     const jwt = req.session.auth.jwt;
 
     const populateOptions = [
@@ -26,6 +27,11 @@ module.exports = async (req, res, next) => {
         },
         title: {
             $contains :search
+        },
+        module: {
+            id: {
+                $eq: moduleId
+            }
         }
     }
 
@@ -41,5 +47,5 @@ module.exports = async (req, res, next) => {
         sort: 'name:asc'
     });
 
-    res.render('topics/list-with-sidebar', {topics, search, modules});
+    res.render('topics/list-with-sidebar', {topics, search, moduleId, modules});
 }

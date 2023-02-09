@@ -316,17 +316,18 @@
       <!-- Page content -->
       <section class="container mt-4 mb-2 mb-md-4 mb-lg-5 pt-lg-2 pb-5">
 
-        <!-- Page title + Layout switcher -->
+        <!-- Page title + Search result statement -->
         <div class="d-flex align-items-center justify-content-between mb-4 pb-1 pb-md-3">
           <h1 class="mb-0">Themenbörse</h1>
-          <div class="d-flex align-items-center ms-sm-4 ms-3">
-            <a href="blog-list-with-sidebar.html" class="nav-link me-2 p-0 active">
-              <i class="bx bx-list-ul fs-4"></i>
-            </a>
-            <a href="blog-grid-with-sidebar.html" class="nav-link p-0">
-              <i class="bx bx-grid-alt fs-4"></i>
-            </a>
-          </div>
+          <% if(typeof search !== 'undefined'){ %>
+            <% if(topics.meta.pagination.total === 1) { %>
+              <p>Es wurde <span class="text-primary">1 Suchergebnis</span> gefunden:</p>
+            <% } else if(topics.meta.pagination.total === 0) { %>
+              <p>Es wurden <span class="text-primary">keine Suchergebnisse</span> gefunden.</p>
+            <% } else { %>
+                <p>Es wurden <span class="text-primary"><%= topics.meta.pagination.total %> Suchergebnisse</span> gefunden:</p>
+              <% } %>
+          <% } %>
         </div>
 
 
@@ -377,13 +378,24 @@
               <article class="card me-xl-5 mb-4">
                 <div class="card-body">
                   <div class="d-flex justify-content-between mb-3">
-                    <a href="#" class="badge fs-sm text-decoration-none" style="background-color: <%= topic.module.color.background %>; color: <%= topic.module.color.text %>"><%= topic.module.name %> (<%= topic.module.number %>)</a>
+                    <a
+                      href="#"
+                      data-mode="set"
+                      data-attribute="moduleId"
+                      data-value="<%= topic.module.id %>"
+                      class="badge fs-sm text-decoration-none search-params-link"
+                      style="background-color: <%= topic.module.color.background %>; color: <%= topic.module.color.text %>"
+                    >
+                      <%= topic.module.name %> (<%= topic.module.number %>)
+                    </a>
+                    <!--
                     <a href="#" class="btn btn-icon btn-secondary btn-sm rounded-circle position-absolute top-0 end-0 zindex-5 me-3 mt-3" data-bs-toggle="tooltip" data-bs-placement="left" title="Read later">
                       <i class="bx bx-bookmark"></i>
                     </a>
+                    -->
                   </div>
                   <h3 class="h4">
-                    <a href="blog-single.html"><%= topic.title %></a>
+                    <a href="/topic-exchange-platform/topic/<%= topic.id %>"><%= topic.title %></a>
                   </h3>
                   <p class="mb-4"> <%= topic.description %></p>
                   <div class="d-flex align-items-center text-muted">
@@ -423,7 +435,13 @@
                   <ul class="pagination">
                     <% if(page !== 1){ %>
                       <li class="page-item">
-                        <a href="#" data-page="<%= data - 1 %>" class="page-link pagination-link">
+                        <a
+                          href="#"
+                          data-mode="set"
+                          data-attribute="page"
+                          data-value="<%= page - 1 %>"
+                          class="page-link search-params-link"
+                        >
                           <i class="bx bx-chevron-left ms-n1 me-1"></i>
                           Zurück
                         </a>
@@ -435,13 +453,27 @@
                     <% for(let i = page - 2; i <= page + 2; i++){ %>
                         <% if(i >= 1 && i <= pageCount){ %>
                           <li class="page-item d-none d-sm-block <%= i === page ? 'active': '' %> ">
-                            <a data-page="<%= i %>" href="#" class="page-link pagination-link"><%= i %></a>
+                            <a
+                              data-mode="set"
+                              data-attribute="page"
+                              data-value="<%= i %>"
+                              href="#"
+                              class="page-link search-params-link"
+                            >
+                              <%= i %>
+                            </a>
                           </li>
                         <% } %>
                     <% } %>
                     <% if(page < pageCount){ %>
                       <li class="page-item">
-                        <a href="#" data-page="<%= page + 1 %>" class="page-link pagination-link">
+                        <a
+                          href="#"
+                          data-mode="set"
+                          data-attribute="page"
+                          data-value="<%= page + 1 %>"
+                          class="page-link search-params-link"
+                        >
                           Nächste
                           <i class="bx bx-chevron-right me-n1 ms-1"></i>
                         </a>
@@ -478,11 +510,22 @@
                   <h3 class="h5">Module</h3>
                   <ul class="nav flex-column fs-sm">
                     <li class="nav-item mb-1">
-                      <a href="#" class="nav-link py-1 px-0 active">Alle Module <span class="fw-normal opacity-60 ms-1"></span></a>
+                      <a
+                        href="#"
+                        data-mode="delete"
+                        data-attribute="moduleId"
+                        class="nav-link py-1 px-0 search-params-link <%= typeof moduleId === 'undefined' ? 'active' : null %>">Alle Module <span class="fw-normal opacity-60 ms-1"></span
+                      ></a>
                     </li>
                     <% for(let module of modules.data){ %>
                       <li class="nav-item mb-1">
-                        <a href="#" class="nav-link py-1 px-0"><%= module.name %>> <span class="fw-normal opacity-60 ms-1"></span></a>
+                        <a
+                          href="#"
+                          data-mode="set"
+                          data-attribute="moduleId"
+                          data-value="<%= module.id %>"
+                          class="nav-link py-1 px-0 search-params-link <%= typeof moduleId !== 'undefined' && moduleId == module.id ? 'active' : null %>"><%= module.name %> (<%= module.number %>) <span class="fw-normal opacity-60 ms-1"></span>
+                        </a>
                       </li>
                     <% } %>
                   </ul>
@@ -791,14 +834,21 @@
       });
 
       // pagination handler
-      const paginationLinks = document.getElementsByClassName('pagination-link');
-      for(let i = 0; i < paginationLinks.length; i++){
-        paginationLinks[i].addEventListener('click', (e) => {
+      const searchParamsLinks = document.getElementsByClassName('search-params-link');
+      for(let i = 0; i < searchParamsLinks.length; i++){
+        searchParamsLinks[i].addEventListener('click', (e) => {
           e.preventDefault();
-          const page = parseInt(paginationLinks[i].dataset.page);
+          const attribute = searchParamsLinks[i].dataset.attribute;
+          const value = searchParamsLinks[i].dataset.value;
+          const mode = searchParamsLinks[i].dataset.mode;
 
           const searchParams = new URLSearchParams(window.location.search);
-          searchParams.set('page', page);
+
+          if(mode === 'set'){
+            searchParams.set(attribute, value);
+          } else if (mode === 'delete'){
+            searchParams.delete(attribute);
+          }
 
           window.location.search = searchParams.toString();
         });

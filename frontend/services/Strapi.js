@@ -22,13 +22,29 @@ class Strapi {
         return await this.getEntities('topics', queryObject);
     }
 
+    async getTopic(id, queryObject){
+        return await this.getEntity('topics', id, queryObject)
+    }
+
     async getModules(queryObject){
         return await this.getEntities('modules', queryObject);
     }
 
     async getEntities(entity, queryObject){
         const path = `/api/${entity}`;
-        const query = queryObject ? "?" + qs.stringify(queryObject): "";
+        const query = queryObject ? "?" + qs.stringify(queryObject) : "";
+        const { data } = await axios.get(this.url + path + query, {
+            headers: {
+                Authorization: `Bearer ${this.jwt}`
+            }
+        });
+
+        return data;
+    }
+
+    async getEntity(entity, id, queryObject){
+        const path = `/api/${entity}/${id}`;
+        const query = queryObject ? "?" + qs.stringify(queryObject) : ""
         const { data } = await axios.get(this.url + path + query, {
             headers: {
                 Authorization: `Bearer ${this.jwt}`
