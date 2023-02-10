@@ -1,4 +1,4 @@
-const {getValidator} = require("../../util/index.");
+const {getValidator} = require("../../util");
 const {body, query} = require("express-validator");
 exports.sendLinkValidator = getValidator([
     body('email_prefix').notEmpty().withMessage("Email prefix is empty"),

@@ -45,6 +45,13 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::difficulty.difficulty"
+    },
+    "thumbnail": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

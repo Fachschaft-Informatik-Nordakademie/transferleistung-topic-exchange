@@ -7,6 +7,7 @@ module.exports = async (req, res, next) => {
     const jwt = req.session.auth.jwt;
 
     const populateOptions = [
+        'thumbnail',
         'difficulty',
         'module',
         'module.color'

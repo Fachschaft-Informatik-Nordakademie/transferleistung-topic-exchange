@@ -74,6 +74,13 @@
       "relation": "oneToMany",
       "target": "api::application.application",
       "mappedBy": "student"
+    },
+    "image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

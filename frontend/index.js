@@ -5,8 +5,15 @@ require('dotenv').config()
 
 const authenticationRouter = require('./routes/authentication');
 const topicExchangePlatformRouter = require('./routes/topic-exchange-platform');
+const {getStrapiAssetURL} = require("./util");
 
 const app = express();
+
+app.locals = {
+    functions: {
+        getStrapiAssetURL
+    }
+}
 
 app.set('view engine', 'ejs');
 
@@ -45,7 +52,7 @@ app.use('/topic-exchange-platform', topicExchangePlatformRouter);
 
 app.get('/', (req, res, next) => {
     res.render('index');
-})
+});
 
 app.listen(process.env.PORT, () => {
     console.log(`App running on Port ${process.env.PORT}`);
